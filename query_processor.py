@@ -1,13 +1,22 @@
 import re
 
 
-def expand_query(query):
+def expand_query(query, step = 1):
     query = query.strip().capitalize()
     if not query.endswith('?'):
         query += '?'
 
     # Expand the query to request detailed educational information
-    detailed_query = query_bullet_point(query)
+
+    detailed_query = ""
+
+    if(step == 1):
+        detailed_query = query_bullet_point(query)
+    elif(step == 2):
+        detailed_query = querry_QAs(query)
+    elif(step == 3):
+        detailed_query = query_summary_sheet(query)
+
     return detailed_query
 
 
