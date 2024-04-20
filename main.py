@@ -55,8 +55,9 @@ def main_loop():
         try:
             response = generate_response(input_query, client, messages, format_step)
             
+            # Store the query, response, and selected format in the database
             conn = db.create_connection()
-            db.insert_query_response(conn, input_query, response)
+            db.insert_query_response(conn, input_query, response, format_step)
             conn.close()
 
             print("GPT:", response)

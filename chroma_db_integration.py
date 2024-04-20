@@ -13,18 +13,19 @@ def create_table_queries(conn):
     CREATE TABLE IF NOT EXISTS queries (
         id INTEGER PRIMARY KEY,
         query TEXT,
-        response TEXT
+        response TEXT,
+        format INTEGER
     );
     """
     cur = conn.cursor()
     cur.execute(sql)
     conn.commit()
 
-def insert_query_response(conn, query, response):
-    """Insert a new query and response into the 'queries' table."""
-    sql = ''' INSERT INTO queries(query, response) VALUES(?, ?) '''
+def insert_query_response(conn, query, response, format_step):
+    """Insert a new query, response, and format into the 'queries' table."""
+    sql = ''' INSERT INTO queries(query, response, format) VALUES(?, ?, ?) '''
     cur = conn.cursor()
-    cur.execute(sql, (query, response))
+    cur.execute(sql, (query, response, format_step))
     conn.commit()
     return cur.lastrowid
 
