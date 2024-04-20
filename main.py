@@ -1,7 +1,7 @@
 import openai
 from dotenv import load_dotenv
 import os
-import querypreprocessor 
+import querypreprocessor
 
 load_dotenv()
 API_KEY = os.getenv("OPENAI_API_KEY")
@@ -15,10 +15,10 @@ def generate_response(query, client, messages, step):
     preprocessed_query = querypreprocessor.expand_query(query, step)
     try:
         chat_completion = client.chat.completions.create(
-            model="gpt-3.5-turbo", 
+            model="gpt-3.5-turbo",
             messages=messages + [{"role": "user", "content": preprocessed_query}]
         )
-        response = chat_completion.choices[0].message.content 
+        response = chat_completion.choices[0].message.content
         messages.append({"role": "user", "content": preprocessed_query})
         messages.append({"role": "assistant", "content": response})
         return response
