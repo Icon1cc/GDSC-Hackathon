@@ -7,5 +7,7 @@
 5. pipenv shell
 6. python3 main.py
 7. python3 chroma_db_integration.py
+8. pip3 install python-docx
+
 
 

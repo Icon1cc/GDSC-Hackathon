@@ -7,7 +7,6 @@ import file_handlers
 
 load_dotenv()
 API_KEY = os.getenv("OPENAI_API_KEY")
-
 openai.api_key = API_KEY
 
 
@@ -77,11 +76,9 @@ def main_loop():
             except ValueError:
                 print("Please enter a valid number (1, 2, or 3).")
                 continue
-
             input_query = input("Please enter your question: ")
             if input_query.lower() == 'exit':
                 break
-
             response = generate_response(
                 input_query, client, messages, format_step)
             conn = db.create_connection()
@@ -92,12 +89,21 @@ def main_loop():
             file_path = input("Enter the file path: ")
             if file_path.lower().endswith('.pdf'):
                 text = file_handlers.extract_text_from_pdf(file_path)
-                last_extracted_text = text
-            elif any(file_path.lower().endswith(ext) for ext in ['.png', '.jpg', '.jpeg']):
+            elif file_path.lower().endswith(('.png', '.jpg', '.jpeg')):
                 text = file_handlers.extract_text_from_image(file_path)
-                last_extracted_text = text
+                if text.strip() == "":
+                    print("No text could be extracted from the image.")
+                else:
+                    print(
+                        "Text extracted from the image. You can now interact with it.")
+            elif file_path.lower().endswith('.docx'):
+                text = file_handlers.extract_text_from_docx(file_path)
+            elif file_path.lower().endswith('.txt'):
+                text = file_handlers.extract_text_from_txt(file_path)
             else:
                 print("Unsupported file type.")
+                continue
+            last_extracted_text = text
             conn = db.create_connection()
             db.insert_query_response(
                 conn, "File uploaded: " + file_path, "Text stored for interaction", 0)
@@ -134,7 +140,7 @@ def main_loop():
                 print("No past queries found.")
         elif choice == '4':
             if last_extracted_text:
-                print("Ready to interact with the last extracted text. Type your query:")
+                print("Ready to interact with the extracted text. Type your query:")
                 query = input()
                 if query.lower() == 'exit':
                     break
@@ -145,7 +151,8 @@ def main_loop():
                 conn.close()
                 print("Response:", response)
             else:
-                print("No extracted text available. Please upload a file first.")
+                print(
+                    "No extracted text available. Please upload a file and ensure text was successfully extracted.")
         elif choice == '5' or choice.lower() == 'exit':
             print("Exiting the Simulator.")
             break
