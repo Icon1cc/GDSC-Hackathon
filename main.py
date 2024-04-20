@@ -15,11 +15,12 @@ def process_input(input_path, client):
     return generate_response(expanded_query, client)
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
+    if len(sys.argv) != 1:
         print("Usage: python main.py <input_path_or_query>")
         sys.exit(1)
-    
-    input_path = sys.argv[1]
+
+    input_path = input("What is your query: ")
+
     client = setup_openai()
     response = process_input(input_path, client)
     print(response)
