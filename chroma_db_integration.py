@@ -1,47 +1,37 @@
-from langchain.embeddings import OpenAIEmbeddings
-from langchain_community.vectorstores import Chroma
+import sqlite3
 
+DATABASE_FILE = "/Users/icon1c/Desktop/GDSC-Hackathon/chroma.sqlite3"
 
-class Chroma:
-    def __init__(self, persist_directory, embedding_function):
-        self.db = {}
-        self.embedding_function = embedding_function
+def create_connection():
+    """Create a database connection to the SQLite database."""
+    conn = sqlite3.connect(DATABASE_FILE)
+    return conn
 
-    def store_vector(self, vector, data):
-        self.db[data] = vector
+def create_table_queries(conn):
+    """Create the 'queries' table in the database."""
+    sql = """
+    CREATE TABLE IF NOT EXISTS queries (
+        id INTEGER PRIMARY KEY,
+        query TEXT,
+        response TEXT
+    );
+    """
+    cur = conn.cursor()
+    cur.execute(sql)
+    conn.commit()
 
-    def similarity_search(self, query_vector, top_k=3):
-        return sorted(self.db.items(), key=lambda x: -x[1].dot(query_vector))[:top_k]
+def insert_query_response(conn, query, response):
+    """Insert a new query and response into the 'queries' table."""
+    sql = ''' INSERT INTO queries(query, response) VALUES(?, ?) '''
+    cur = conn.cursor()
+    cur.execute(sql, (query, response))
+    conn.commit()
+    return cur.lastrowid
 
+def main():
+    conn = create_connection()
+    create_table_queries(conn)
+    conn.close()
 
-def setup_chroma_db(embedding_function):
-    return Chroma(persist_directory="emb", embedding_function=embedding_function)
-
-
-def split_response_into_chunks(embeddings, text, max_length=500):
-    words = text.split()
-    chunks = []
-    current_chunk = []
-
-    for word in words:
-        current_chunk.append(word)
-        if sum(len(w) for w in current_chunk) > max_length:
-            chunks.append(' '.join(current_chunk))
-            current_chunk = []
-
-    if current_chunk:
-        chunks.append(' '.join(current_chunk))
-
-    return chunks
-
-
-def store_query_vector(chunks, embeddings, db):
-    for chunk in chunks:
-        embedding = embeddings.embed_query(chunk)
-        db.store_vector(embedding, data=chunk)
-
-
-def retrieve_similar_chunks(query, embeddings, db):
-    query_embedding = embeddings.embed_query(query)
-    results = db.similarity_search(query_embedding, top_k=3)
-    return ' '.join([result[0] for result in results])
+if __name__ == "__main__":
+    main()

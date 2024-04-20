@@ -2,6 +2,7 @@ import openai
 from dotenv import load_dotenv
 import os
 import querypreprocessor
+import chroma_db_integration as db
 
 load_dotenv()
 API_KEY = os.getenv("OPENAI_API_KEY")
@@ -23,7 +24,7 @@ def generate_response(query, client, messages, step):
         messages.append({"role": "assistant", "content": response})
         return response
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"An error occurred while generating response: {e}")
         return f"An error occurred: {e}"
 
 def main_loop():
@@ -50,9 +51,17 @@ def main_loop():
         if input_query.lower() == 'exit':
             print("Exiting the Simulator.")
             break
+        
+        try:
+            response = generate_response(input_query, client, messages, format_step)
+            
+            conn = db.create_connection()
+            db.insert_query_response(conn, input_query, response)
+            conn.close()
 
-        response = generate_response(input_query, client, messages, format_step)
-        print("GPT:", response)
+            print("GPT:", response)
+        except Exception as e:
+            print(f"An error occurred: {e}")
 
 if __name__ == "__main__":
     main_loop()
