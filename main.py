@@ -1,13 +1,11 @@
 import openai
 from dotenv import load_dotenv
 import os
-import querypreprocessor  # Ensure this is correctly named and accessible
+import querypreprocessor 
 
-# Load environment variables from a .env file
 load_dotenv()
 API_KEY = os.getenv("OPENAI_API_KEY")
 
-# Initialize the OpenAI client with your API key
 openai.api_key = API_KEY
 
 def setup_openai_client():
@@ -16,18 +14,15 @@ def setup_openai_client():
 def generate_response(query, client, messages, step):
     preprocessed_query = querypreprocessor.expand_query(query, step)
     try:
-        # Attempting to generate a response with the GPT model
         chat_completion = client.chat.completions.create(
-            model="gpt-3.5-turbo",  # Adjust model as needed
+            model="gpt-3.5-turbo", 
             messages=messages + [{"role": "user", "content": preprocessed_query}]
         )
-        # Access the response text correctly
-        response = chat_completion.choices[0].message.content  # Accessing the 'content' attribute directly
+        response = chat_completion.choices[0].message.content 
         messages.append({"role": "user", "content": preprocessed_query})
         messages.append({"role": "assistant", "content": response})
         return response
     except Exception as e:
-        # Print the exception if there's an error
         print(f"An error occurred: {e}")
         return f"An error occurred: {e}"
 
@@ -51,7 +46,7 @@ def main_loop():
             print("Please enter a valid number (1, 2, or 3).")
             continue
 
-        input_query = input("You: ")
+        input_query = input("Please enter your question: ")
         if input_query.lower() == 'exit':
             print("Exiting the Simulator.")
             break

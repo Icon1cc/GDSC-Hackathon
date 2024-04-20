@@ -8,12 +8,9 @@ class Chroma:
         self.embedding_function = embedding_function
 
     def store_vector(self, vector, data):
-        # Here, we're assuming a simplistic way to store vectors
         self.db[data] = vector
 
     def similarity_search(self, query_vector, top_k=3):
-        # This is a mock implementation of similarity search
-        # For real cases, you would implement an actual vector search algorithm
         return sorted(self.db.items(), key=lambda x: -x[1].dot(query_vector))[:top_k]
 
 

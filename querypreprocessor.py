@@ -1,12 +1,8 @@
 import re
-
-
 def expand_query(query, step = 1):
     query = query.strip().capitalize()
     if not query.endswith('?'):
         query += '?'
-
-    # Expand the query to request detailed educational information
 
     detailed_query = ""
 
