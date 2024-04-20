@@ -1,7 +1,7 @@
 # GDSC-Hackathon
 
-1. pip install python-dotenv
-2. pip install --upgrade openai
-3. pip install openai pillow PyMuPDF pytesseract
+1. pip3 install python-dotenv
+2. pip3 install --upgrade openai
+3. pip3 install openai pillow PyMuPDF pytesseract
 
 
