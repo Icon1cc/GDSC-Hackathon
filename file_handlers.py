@@ -10,12 +10,13 @@ def extract_text_from_pdf(file_path):
     for page in doc:
         text += page.get_text("text")
         # Extracting images from PDF and performing OCR
-        for img_index, img in enumerate(page.get_images(full=True)):
-            xref = img[0]
-            base_image = doc.extract_image(xref)
-            image_bytes = base_image["image"]
-            image = Image.open(io.BytesIO(image_bytes))
-            text += pytesseract.image_to_string(image)
+
+        # for img_index, img in enumerate(page.get_images(full=True)):
+        #     xref = img[0]
+        #     base_image = doc.extract_image(xref)
+        #     image_bytes = base_image["image"]
+        #     image = Image.open(io.BytesIO(image_bytes))
+        #     text += pytesseract.image_to_string(image)
     return text
 
 

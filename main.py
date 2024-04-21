@@ -14,11 +14,11 @@ def setup_openai_client():
     return openai.OpenAI(api_key=API_KEY)
 
 
-def generate_response(query, client, messages, step, context=""):
-    if context:
-        query = f"Based on the following document content: '{
-            context[:500]}'\n\n{query}"
-    preprocessed_query = querypreprocessor.expand_query(query, step)
+def generate_response(query, client, messages, step, mode, context=""):
+
+    #if context:
+        #query = f"Based on the following document content: '{context[:500]}'\n\n{query}"
+    preprocessed_query = querypreprocessor.expand_query(query, step, int(mode), context[:500])
     try:
         chat_completion = client.chat.completions.create(
             model="gpt-3.5-turbo",
@@ -80,7 +80,7 @@ def main_loop():
             if input_query.lower() == 'exit':
                 break
             response = generate_response(
-                input_query, client, messages, format_step)
+                input_query, client, messages, format_step, choice)
             conn = db.create_connection()
             db.insert_query_response(conn, input_query, response, format_step)
             conn.close()
@@ -127,7 +127,7 @@ def main_loop():
                         if follow_up.lower() == 'exit':
                             break
                         response = generate_response(
-                            follow_up, client, messages, 1, query_details[1])
+                            follow_up, client, messages, 1, choice, query_details[1])
                         conn = db.create_connection()
                         db.insert_query_response(conn, follow_up, response, 1)
                         conn.close()
@@ -145,7 +145,7 @@ def main_loop():
                 if query.lower() == 'exit':
                     break
                 response = generate_response(
-                    query, client, messages, 1, last_extracted_text)
+                    query, client, messages, 1, int(choice), last_extracted_text)
                 conn = db.create_connection()
                 db.insert_query_response(conn, query, response, 1)
                 conn.close()
