@@ -215,7 +215,7 @@ def main_loop():
 
 
 if __name__ == "__main__":
-    print(download_file_from_google_drive(file_url))
+    #print(download_file_from_google_drive(file_url))
     main_loop()
 
 @app.get("/get-bullet1/")

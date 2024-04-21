@@ -6,6 +6,9 @@ def expand_query(query, step = 1, mode = 1, context = ""):
 
     if(mode == 1):
         detailed_query = expand_query1(query, int(step))
+    elif(mode == 3):
+        detailed_query = expand_query2(query, int(step), context)
+
     elif(mode == 4):
         detailed_query = expand_query2(query, int(step), context)
     else:
@@ -44,6 +47,8 @@ def expand_query2(query, step = 1, context = ""):
         detailed_query = querry_QAs2(query, context)
     elif (step == 3):
         detailed_query = query_summary_sheet2(query, context)
+    elif (step == 4):
+        detailed_query = query_accompagny_user(query, context)
 
     return detailed_query
 
@@ -111,7 +116,7 @@ def query_summary_sheet(query):
         f"The template of the answer would be:"
         f"- Start your answer with word \"START\"."
         f"- First paragraph expressed without a line break as \"IDEPAR\" + a short title of the most important idea that this question tackles + \"IDEDESC \" +  a detailed description of the idea you chose."
-        f"- The next paragraphs will be for two or three key aspects concerning this idea"
+        f"- The next paragraphs will be for two key aspects concerning this idea"
         f"They will be expressed without line break as \"PARTIT\" + a short title of the idea chosen + \"PARTEXP\" +  explanations in many details of that aspect] ."
         f"- Next paragraph will start by \"SUMALL\" + a summary about the information presented"
         f"It should end with the word \"END\""
@@ -133,6 +138,18 @@ def query_summary_sheet2(query, context = ""):
         f"It should end with the word \"END\""
     )
     return detailed_query
+
+def query_accompagny_user(query, context = ""):
+    detailed_query = (
+        f"I will write a description of the way I want you to answer to the following question."
+        f"Based mainly on this document: {context}"
+        f"The question will be : {query}"
+        f"I want you to make a roadmap to tutor the user on how to read the document. It should include:"
+        f"What points to pay attention to, regarding the query"
+        f"And what needs to be researched from external sources for comprehension."
+    )
+    return detailed_query
+
 
 def parse_bullet_answer(answer):
     list_titles = []
@@ -165,9 +182,6 @@ def parse_bullet_answer(answer):
         tempDesc = answer[list_descs[i] + len(desc_sep): list_lines[i]]
         titles.append(tempTitle)
         titles.append(tempDesc)
-
-
-
 
     listDics = []
     for i in range (0, int(len(titles)/2)):
@@ -237,7 +251,8 @@ def parse_QA_answer(answer):
         dict = {}
         dict['title'] = titles[4*i]
         dict['correct'] = titles[4*i + 1]
-        dict['incorrect'] = [titles[4*i + 2], titles[4*i + 3]]
+        dict['incorrect1'] = titles[4*i + 2]
+        dict['incorrect2'] = titles[4*i + 3]
         listDics.append(dict)
 
     return listDics
@@ -303,7 +318,8 @@ def parse_summary_answer(answer):
 
     dict["titleData"] = titleIdea
     dict["descriptionIdea"] = descIdea
-    dict["parts"] = titles
+    dict["part1"] = titles[0]
+    dict["part2"] = titles[1]
     dict["summary"] = sumall
 
     return dict
