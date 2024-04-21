@@ -233,8 +233,8 @@ def get_summary1(query):
     json_string = querypreprocessor.parse_summary_answer(response)
     return json_string
 
-@app.get("/get-summarry-2/")
-def get_summary1(query, file):
+@app.get("/get-summary-2/")
+def get_summary2(query, file):
     client = setup_openai_client()
     messages = []
     response = generate_response(
