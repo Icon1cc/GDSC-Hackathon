@@ -1,4 +1,5 @@
 import re
+import json
 def expand_query(query, step = 1, mode = 1, context = ""):
 
     detailed_query = ""
@@ -165,9 +166,14 @@ def parse_bullet_answer(answer):
         titles.append(tempTitle)
         titles.append(tempDesc)
 
-    print(titles)
 
-    return titles
+    dic = {}
+    for i in range (0, int(len(titles)/2)):
+        dic[titles[2*i]] = titles[2*i+1]
+
+    json_string = json.dumps(dic)
+
+    return json_string
 
 
 def parse_QA_answer(answer):
@@ -213,15 +219,20 @@ def parse_QA_answer(answer):
         titles.append(tempDesc2)
         titles.append(tempDesc3)
 
-    print(titles)
+    listDics = []
+    for i in range(0, int(len(titles)/4)):
+        dict = {}
+        dict['title'] = titles[4*i]
+        dict['correct'] = titles[4*i + 1]
+        dict['incorrect'] = [titles[4*i + 2], titles[4*i + 3]]
+        listDics.append(dict)
 
-    return titles
+    json_string = json.dumps(listDics)
+    return json_string
 
 def parse_summary_answer(answer):
 
     #LES OUTPUTS CEST TITLEIDEA, DESCIDEA, TITLES, SUMALL
-
-
     titleIdea = ""
     descIdea = ""
 
@@ -276,4 +287,12 @@ def parse_summary_answer(answer):
     print(titles)
     print(sumall)
 
-    return titles
+    dict = {}
+
+    dict["titleIdea"] = titleIdea
+    dict["descriptionIdea"] = descIdea
+    dict["parts"] = titles
+    dict["summary"] = sumall
+
+    json_string = json.dumps(dict)
+    return json_string

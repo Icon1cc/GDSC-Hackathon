@@ -4,6 +4,10 @@ import os
 import querypreprocessor
 import chroma_db_integration as db
 import file_handlers
+from fastapi import FastAPI, HTTPException
+
+app = FastAPI()
+
 
 load_dotenv()
 API_KEY = os.getenv("OPENAI_API_KEY")
@@ -162,3 +166,83 @@ def main_loop():
 
 if __name__ == "__main__":
     main_loop()
+
+@app.get("/get-bullet1/")
+def get_bullet1(query):
+    client = setup_openai_client()
+    messages = []
+    response = generate_response(
+        query, client, messages, 1, 1)
+    conn = db.create_connection()
+    db.insert_query_response(conn, query, response, 1)
+    conn.close()
+
+    json_string = querypreprocessor.parse_bullet_answer(response)
+    return json_string
+
+@app.get("/get-bullet2/")
+def get_bullet2(query, file):
+    client = setup_openai_client()
+    messages = []
+    response = generate_response(
+        query, client, messages, 1, 2)
+    conn = db.create_connection()
+    db.insert_query_response(conn, query, response, 1)
+    conn.close()
+
+    json_string = querypreprocessor.parse_bullet_answer(response)
+    return json_string
+
+
+@app.get("/get-QA1/")
+def get_QA1(query):
+    client = setup_openai_client()
+    messages = []
+    response = generate_response(
+        query, client, messages, 2, 1)
+    conn = db.create_connection()
+    db.insert_query_response(conn, query, response, 2)
+    conn.close()
+
+    json_string = querypreprocessor.parse_QA_answer(response)
+    return json_string
+
+@app.get("/get-QA2/")
+def get_QA2(query, file):
+    client = setup_openai_client()
+    messages = []
+    response = generate_response(
+        query, client, messages, 2, 2)
+    conn = db.create_connection()
+    db.insert_query_response(conn, query, response, 2)
+    conn.close()
+
+    json_string = querypreprocessor.parse_QA_answer(response)
+    return json_string
+
+@app.get("/get-summarry-1/")
+def get_summary1(query):
+    client = setup_openai_client()
+    messages = []
+    response = generate_response(
+        query, client, messages, 3, 1)
+    conn = db.create_connection()
+    db.insert_query_response(conn, query, response, 3)
+    conn.close()
+
+    json_string = querypreprocessor.parse_summary_answer(response)
+    return json_string
+
+@app.get("/get-summarry-2/")
+def get_summary1(query, file):
+    client = setup_openai_client()
+    messages = []
+    response = generate_response(
+        query, client, messages, 3, 2)
+    conn = db.create_connection()
+    db.insert_query_response(conn, query, response, 3)
+    conn.close()
+
+    json_string = querypreprocessor.parse_summary_answer(response)
+    return json_string
+
