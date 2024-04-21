@@ -1,6 +1,6 @@
 import sqlite3
 
-DATABASE_FILE = "C:\Data\Adrian\Github\GDSC-Hackathon\chroma.sqlite3"
+DATABASE_FILE = "/Users/icon1c/Desktop/GDSC-Hackathon/chroma.sqlite3"
 
 def create_connection():
     """Create a database connection to the SQLite database."""
