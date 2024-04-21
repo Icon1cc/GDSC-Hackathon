@@ -54,7 +54,7 @@ def query_bullet_point(query):
     detailed_query = (
         f"I will write a description of the way I want you to answer to the following question."
         f"The question that the user wants to learn about (studying about it context) will be : {query}"
-        f"Identify the three to five most important ideas required before being able to answer this question. These idea should be such that if the user understands them all, he can answer the question by himself, not directly give him the answer."
+        f"Identify the three most important ideas required before being able to answer this question. These idea should be such that if the user understands them all, he can answer the question by himself, not directly give him the answer."
         f"The template of the answer would be:"
         f"- Start your answer with word \"START\" and end with \"END\"."
         f"- Create a bullet point list of:"
@@ -68,7 +68,7 @@ def query_bullet_point2(query, context):
     detailed_query = (
         f"I will write a description of the way I want you to answer to the following question."
         f"Based mainly on this document: {context}"
-        f"I want you to build three - five hint ideas for answering the question \"{query}\". These hints should help the user come up himself with the answer, not give it to him."
+        f"I want you to build three hint ideas for answering the question \"{query}\". These hints should help the user come up himself with the answer, not give it to him."
         f"The template of the answer would be:"
         f"- Start your answer with word \"START\" and end with \"END\"."
         f"- Create a bullet point list of:"
@@ -167,6 +167,8 @@ def parse_bullet_answer(answer):
         titles.append(tempDesc)
 
 
+
+
     listDics = []
     for i in range (0, int(len(titles)/2)):
         dic = {}
@@ -174,9 +176,17 @@ def parse_bullet_answer(answer):
         dic['description'] = titles[2*i+1]
         listDics.append(dic)
 
-    json_string = json.dumps(listDics)
+    dicto = {
+        "title1" : titles[0],
+        "description1" : titles[1],
+        "title2" : titles[2],
+        "description2" : titles[3],
+        "title3" : titles[4],
+        "description3" : titles[5],
+    }
 
-    return json_string
+
+    return dicto
 
 
 def parse_QA_answer(answer):
@@ -230,8 +240,7 @@ def parse_QA_answer(answer):
         dict['incorrect'] = [titles[4*i + 2], titles[4*i + 3]]
         listDics.append(dict)
 
-    json_string = json.dumps(listDics)
-    return json_string
+    return listDics
 
 def parse_summary_answer(answer):
 
@@ -297,5 +306,4 @@ def parse_summary_answer(answer):
     dict["parts"] = titles
     dict["summary"] = sumall
 
-    json_string = json.dumps(dict)
-    return json_string
+    return dict

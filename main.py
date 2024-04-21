@@ -232,11 +232,14 @@ def get_bullet1(query):
     return json_string
 
 @app.get("/get-bullet2/")
-def get_bullet2(query, file):
+def get_bullet2(query, file_url):
     client = setup_openai_client()
     messages = []
+
+    fileContent = download_file_from_google_drive(file_url)
+
     response = generate_response(
-        query, client, messages, 1, 2)
+        query, client, messages, 1, 2, fileContent)
     conn = db.create_connection()
     db.insert_query_response(conn, query, response, 1)
     conn.close()
