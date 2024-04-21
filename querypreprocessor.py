@@ -167,11 +167,14 @@ def parse_bullet_answer(answer):
         titles.append(tempDesc)
 
 
-    dic = {}
+    listDics = []
     for i in range (0, int(len(titles)/2)):
-        dic[titles[2*i]] = titles[2*i+1]
+        dic = {}
+        dic['title'] = titles[2*i]
+        dic['description'] = titles[2*i+1]
+        listDics.append(dic)
 
-    json_string = json.dumps(dic)
+    json_string = json.dumps(listDics)
 
     return json_string
 
@@ -289,7 +292,7 @@ def parse_summary_answer(answer):
 
     dict = {}
 
-    dict["titleIdea"] = titleIdea
+    dict["titleData"] = titleIdea
     dict["descriptionIdea"] = descIdea
     dict["parts"] = titles
     dict["summary"] = sumall

@@ -5,6 +5,7 @@ import querypreprocessor
 import chroma_db_integration as db
 import file_handlers
 from fastapi import FastAPI, HTTPException
+import requests
 
 app = FastAPI()
 
@@ -54,6 +55,55 @@ def follow_up_question(id):
     result = cur.fetchone()
     conn.close()
     return result
+
+
+def download_file_from_google_drive(shared_link):
+    # Extract the file ID from the shared link
+    start = shared_link.find('/d/') + 3
+    end = shared_link.find('/view')
+    file_id = shared_link[start:end]
+
+    # Construct the direct download URL
+    download_url = f"https://drive.google.com/uc?export=download&id={file_id}"
+
+    # Initial request to fetch the file
+    with requests.Session() as session:
+        response = session.get(download_url, stream=True)
+        token = get_confirm_token(response)
+
+        # If there's a "confirm" token in the initial response, it's a large file warning
+        if token:
+            # Construct the URL to confirm the download
+            download_url = f"https://drive.google.com/uc?export=download&id={file_id}&confirm={token}"
+            response = session.get(download_url, stream=True)
+
+        # Save the content to a file
+        finalstring = save_response_content(response, 'downloaded_file.txt')  # Name your file appropriately
+        return finalstring
+
+
+def get_confirm_token(response):
+    # Check for the presence of the "confirm" token in the cookie
+    for key, value in response.cookies.items():
+        if key.startswith('download_warning'):
+            return value
+    return None
+
+
+def save_response_content(response, destination):
+    # Write the response content to a file in chunks
+    finalString = ""
+    CHUNK_SIZE = 32768  # 32KB chunks
+    with open(destination, "wb") as f:
+        for chunk in response.iter_content(CHUNK_SIZE):
+            if chunk:  # filter out keep-alive new chunks
+                finalString = finalString +  chunk.decode('utf-8')
+
+    return finalString
+
+# Use the direct download URL
+file_url = 'https://drive.google.com/file/d/1zwfys7t5KHLFPIaO591Zg96rJ5vKfKWu/view?usp=sharing'
+
 
 
 def main_loop():
@@ -165,6 +215,7 @@ def main_loop():
 
 
 if __name__ == "__main__":
+    print(download_file_from_google_drive(file_url))
     main_loop()
 
 @app.get("/get-bullet1/")
