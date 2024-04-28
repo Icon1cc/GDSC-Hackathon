@@ -6,6 +6,9 @@ def expand_query(query, step = 1, mode = 1, context = ""):
 
     if(mode == 1):
         detailed_query = expand_query1(query, int(step))
+    elif(mode == 3):
+        detailed_query = expand_query2(query, int(step), context)
+
     elif(mode == 4):
         detailed_query = expand_query2(query, int(step), context)
     else:
@@ -44,6 +47,8 @@ def expand_query2(query, step = 1, context = ""):
         detailed_query = querry_QAs2(query, context)
     elif (step == 3):
         detailed_query = query_summary_sheet2(query, context)
+    elif (step == 4):
+        detailed_query = query_accompagny_user(query, context)
 
     return detailed_query
 
@@ -54,7 +59,7 @@ def query_bullet_point(query):
     detailed_query = (
         f"I will write a description of the way I want you to answer to the following question."
         f"The question that the user wants to learn about (studying about it context) will be : {query}"
-        f"Identify the three to five most important ideas required before being able to answer this question. These idea should be such that if the user understands them all, he can answer the question by himself, not directly give him the answer."
+        f"Identify the three most important ideas required before being able to answer this question. These idea should be such that if the user understands them all, he can answer the question by himself, not directly give him the answer."
         f"The template of the answer would be:"
         f"- Start your answer with word \"START\" and end with \"END\"."
         f"- Create a bullet point list of:"
@@ -68,7 +73,7 @@ def query_bullet_point2(query, context):
     detailed_query = (
         f"I will write a description of the way I want you to answer to the following question."
         f"Based mainly on this document: {context}"
-        f"I want you to build three - five hint ideas for answering the question \"{query}\". These hints should help the user come up himself with the answer, not give it to him."
+        f"I want you to build three hint ideas for answering the question \"{query}\". These hints should help the user come up himself with the answer, not give it to him."
         f"The template of the answer would be:"
         f"- Start your answer with word \"START\" and end with \"END\"."
         f"- Create a bullet point list of:"
@@ -110,9 +115,9 @@ def query_summary_sheet(query):
         f"Identify the most important idea that this question tackles."
         f"The template of the answer would be:"
         f"- Start your answer with word \"START\"."
-        f"- First paragraph expressed without a line break as \"IDEPAR\" + a short title of the most important idea that this question tackles + \"IDEDESC \" +  a detailed description of the idea you chose."
-        f"- The next paragraphs will be for two or three key aspects concerning this idea"
-        f"They will be expressed without line break as \"PARTIT\" + a short title of the idea chosen + \"PARTEXP\" +  explanations in many details of that aspect] ."
+        f"- First paragraph expressed without a line break as \"IDEPAR\" + a short title of the most important idea that this question tackles + \"IDEDESCO \" +  a detailed description of the idea you chose. One line."
+        f"- The next paragraphs will be for two key aspects concerning this idea"
+        f"They will be expressed without line break as \"PARTIT\" + a short title of the idea chosen +  explanations in many details of that aspect. On the same line] ."
         f"- Next paragraph will start by \"SUMALL\" + a summary about the information presented"
         f"It should end with the word \"END\""
     )
@@ -128,11 +133,23 @@ def query_summary_sheet2(query, context = ""):
         f"- Start your answer with word \"START\"."
         f"- First paragraph expressed without a line break as \"IDEPAR\" + a short title of the most important idea that this question tackles + \"IDEDESC \" +  a detailed description of the idea you chose."
         f"- The next paragraphs will be for two or three key aspects concerning this idea"
-        f"They will be expressed without line break as \"PARTIT\" + a short title of the idea chosen + \"PARTEXP\" +  explanations in many details of that aspect] ."
+        f"They will be expressed without line break as \"PARTIT\" + a short title of the idea chosen +  explanations in many details of that aspect] ."
         f"- Next paragraph will start by \"SUMALL\" + a summary about the information presented"
         f"It should end with the word \"END\""
     )
     return detailed_query
+
+def query_accompagny_user(query, context = ""):
+    detailed_query = (
+        f"I will write a description of the way I want you to answer to the following question."
+        f"Based mainly on this document: {context}"
+        f"The question will be : {query}"
+        f"I want you to make a roadmap to tutor the user on how to read the document. It should include:"
+        f"What points to pay attention to, regarding the query"
+        f"And what needs to be researched from external sources for comprehension."
+    )
+    return detailed_query
+
 
 def parse_bullet_answer(answer):
     list_titles = []
@@ -166,15 +183,12 @@ def parse_bullet_answer(answer):
         titles.append(tempTitle)
         titles.append(tempDesc)
 
-
     listDics = []
     for i in range (0, int(len(titles)/2)):
         dic = {}
         dic['title'] = titles[2*i]
         dic['description'] = titles[2*i+1]
         listDics.append(dic)
-
-    json_string = json.dumps(listDics)
 
     dicto = {
         "title1" : titles[0],
@@ -184,8 +198,6 @@ def parse_bullet_answer(answer):
         "title3" : titles[4],
         "description3" : titles[5],
     }
-
-    json_string = json.dumps(dicto)
 
 
     return dicto
@@ -239,12 +251,28 @@ def parse_QA_answer(answer):
         dict = {}
         dict['title'] = titles[4*i]
         dict['correct'] = titles[4*i + 1]
-        dict['incorrect'] = [titles[4*i + 2], titles[4*i + 3]]
+        dict['incorrect1'] = titles[4*i + 2]
+        dict['incorrect2'] = titles[4*i + 3]
         listDics.append(dict)
 
+    dict={}
 
-    json_string = json.dumps(dicto)
-    return json_string
+    dict['title1'] = titles[0]
+    dict['correct1'] = titles[1]
+    dict['incorrect11'] = titles[2]
+    dict['incorrect12'] = titles[3]
+
+    dict['title2'] = titles[4]
+    dict['correct2'] = titles[5]
+    dict['incorrect21'] = titles[6]
+    dict['incorrect22'] = titles[7]
+
+    dict['title3'] = titles[8]
+    dict['correct3'] = titles[9]
+    dict['incorrect31'] = titles[10]
+    dict['incorrect32'] = titles[11]
+
+    return dict
 
 def parse_summary_answer(answer):
 
@@ -253,12 +281,12 @@ def parse_summary_answer(answer):
     descIdea = ""
 
 
-    startIntro = "IDEPAR "
-    titleIntro = " IDEDESC "
+    startIntro = "IDEPAR"
+    titleIntro = "IDEDESCO"
 
     start = answer.find(startIntro, 0)
     end = answer.find(titleIntro, 0)
-    descend = answer.find("\n", 0)
+    descend = answer.find("\n", end)
 
     titleIdea = answer[start + len(startIntro): end]
     descIdea = answer[end + len(titleIntro): descend]
@@ -276,23 +304,19 @@ def parse_summary_answer(answer):
     end = 0
     while True:
         start = answer.find(title_sep, start)
-        end = answer.find(desc_sep, end)
-        line = answer.find("\n", end)
+        end = answer.find("\n", start)
         if start == -1:  # no more occurrences found
             break
 
         list_titles.append(start)
         list_descs.append(end)
-        list_lines.append(line)
         start += 1
         end += 1
 
     for i in range(0, len(list_titles)):
 
         tempTitle = answer[list_titles[i] + len(title_sep): list_descs[i]]
-        tempDesc = answer[list_descs[i] + len(desc_sep): list_lines[i]]
         titles.append(tempTitle)
-        titles.append(tempDesc)
 
     sepSumall = "SUMALL "
     indexSumall = answer.find(sepSumall)
@@ -305,10 +329,10 @@ def parse_summary_answer(answer):
 
     dict = {}
 
-    dict["titleIdea"] = titleIdea
+    dict["titleData"] = titleIdea
     dict["descriptionIdea"] = descIdea
-    dict["parts"] = titles
+    dict["part1"] = titles[0]
+    dict["part2"] = titles[1]
     dict["summary"] = sumall
 
-    json_string = json.dumps(dict)
-    return json_string
+    return dict

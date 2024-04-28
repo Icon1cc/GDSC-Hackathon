@@ -33,7 +33,7 @@ const DATA = [
 
 interface BulletProps {
   scroll: (x: number) => void;
-  result?: { title: string; description: string }[];
+  input: string;
 }
 
 interface RenderBulletProps {
@@ -72,7 +72,7 @@ const RenderBullet = ({
   );
 };
 
-const Bullet = ({ scroll }: BulletProps) => {
+const Bullet = ({ scroll, input }: BulletProps) => {
   const [active, setActive] = useState(false);
   const [piece, setPiece] = useState(0);
   const [data, setData] = useState(DATA);
@@ -94,7 +94,7 @@ const Bullet = ({ scroll }: BulletProps) => {
       try {
         const response = await fetch(
           `http://localhost:8000/get-bullet1/?query=${encodeURIComponent(
-            "What is the capital of France?"
+            input
           )}`,
           {
             method: "GET",

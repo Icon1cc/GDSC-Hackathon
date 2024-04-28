@@ -1,4 +1,11 @@
-import { View, Text, StyleSheet, Dimensions, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  Pressable,
+  ScrollView,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 
 import Header from "../header";
@@ -26,7 +33,7 @@ const Summary = ({ input }: SummaryProps) => {
     const sendData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8000/get-summary-1/?query=${encodeURIComponent(
+          `http://localhost:8000/get-summary1/?query=${encodeURIComponent(
             input
           )}`,
           {
@@ -55,25 +62,25 @@ const Summary = ({ input }: SummaryProps) => {
   return (
     <View style={styles.container}>
       <Header title="Let's recap!" subtitle="" />
+      <ScrollView>
+        <View style={styles.center}>
+          <View>
+            <Text style={{ fontSize: 28, fontFamily: "niv-b" }}>
+              {data.title}
+            </Text>
+            <Text style={{ fontSize: 16, fontFamily: "niv-l" }}>
+              {data.description}
+            </Text>
+          </View>
 
-      <View style={styles.center}>
-        <View>
-          <Text style={{ fontSize: 28, fontFamily: "niv-b" }}>
-            {data.title}
-          </Text>
-          <Text style={{ fontSize: 16, fontFamily: "niv-l" }}>
-            {data.description}
-          </Text>
+          <View style={{ gap: 5 }}>
+            <Text style={{ fontSize: 18 }}>{data.part1}</Text>
+            <Text style={{ fontSize: 18 }}>{data.part2}</Text>
+          </View>
+
+          <Text style={{ fontSize: 18 }}>{data.summary}</Text>
         </View>
-
-        <View style={{ gap: 5 }}>
-          <Text style={{ fontSize: 18 }}>{data.part1}</Text>
-          <Text style={{ fontSize: 18 }}>{data.part2}</Text>
-        </View>
-
-        <Text style={{ fontSize: 18 }}>{data.summary}</Text>
-      </View>
-
+      </ScrollView>
       <View style={styles.buttonContainer}>
         <Link href={"/"} asChild>
           <Pressable style={styles.button}>

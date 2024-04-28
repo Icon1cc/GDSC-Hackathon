@@ -30,11 +30,12 @@ const Result = () => {
       <ScrollView
         ref={_ScrollView}
         horizontal
+        scrollEnabled={false}
         showsHorizontalScrollIndicator={false}
       >
+        <Bullet scroll={scrollTo} input={input} />
+        <Test scroll={scrollTo} input={input} />
         <Summary input={input} />
-        <Bullet scroll={scrollTo} />
-        <Test scroll={scrollTo} />
       </ScrollView>
     </SafeAreaView>
   );

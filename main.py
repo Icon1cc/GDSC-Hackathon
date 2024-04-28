@@ -220,7 +220,7 @@ def get_QA2(query, file):
     json_string = querypreprocessor.parse_QA_answer(response)
     return json_string
 
-@app.get("/get-summarry-1/")
+@app.get("/get-summary1/")
 def get_summary1(query):
     client = setup_openai_client()
     messages = []
