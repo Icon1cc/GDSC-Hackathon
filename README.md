@@ -8,14 +8,22 @@ To get started, follow these simple steps:
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/Alex1721/social-app-react-native.git
-cd social-app
+git clone https://github.com/Icon1cc/GDSC-Hackathon.git
+cd presentation/hackatonApp
 ```
 
 ### Install Dependencies
 
 ```bash
 npm install
+pip3 install python-dotenv
+pip3 install --upgrade openai
+pip3 install openai pillow PyMuPDF pytesseract
+pipenv install
+pipenv shell
+python3 main.py
+python3 chroma_db_integration.py
+pip3 install python-docx
 ```
 
 ### Run the app
