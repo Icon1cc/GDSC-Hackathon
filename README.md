@@ -31,6 +31,7 @@ pip3 install python-docx
 
 ```bash
 npx expo start -c
+fastapi dev
 ```
 
 ## Backend
