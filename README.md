@@ -1,5 +1,6 @@
-# Social Network mobile application.
-Welcome to the open-source repository showcasing Expo Router V2's navigation system through the design and build of a social network mobile application with React Native. This project uses **Convex** which is a Typescript backend service solution and **Clerk** for authentication and user management. 
+# GDSC PoliMi @ START HACK
+
+This is the repository for the Google Developer Student Club Start Hackaton. The main folder is './presentation' as it holds all the necessary files during the showcase of our project in front of the jury. This project displays a trivia mobile application using openAI chatGPT system as motor engine in order to generate the data/information. 
 
 ## Installation
 
@@ -34,11 +35,5 @@ npx expo start -c
 
 ## Backend
 
-This project uses Convex as a BAAS and Clerk for authentication and user management. It is mandatory to create a personal account in both services and configure the .env.local file accordingly. Furthermore, a detailed step-by-step guide is given on both services website in order to embed them together.
-
-## Demo
-
-![Simulator Screen Recording - iPhone 15 Pro - 2024-04-04 at 16 59 26](https://github.com/Alex1721/social-app-react-native/assets/73285589/4835b362-28df-464b-b846-45a8347a50ec) ![Simulator Screen Recording - iPhone 15 Pro - 2024-04-12 at 23 35 20](https://github.com/Alex1721/social-app-react-native/assets/73285589/44fbcdcf-ec37-409c-a5f0-dd2fffcb9085)
-
-
+This project uses a local backend. It is mandatory to create a personal account at OpenAI and configure the .env.local file accordingly. Furthermore, a detailed step-by-step guide is given on both services website in order to embed them together.
 
